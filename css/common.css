@@ -1,0 +1,71 @@
+body{
+	font-size: 14px;
+}
+.container{
+	width: 1200px;
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*a标签共同样式开始*/
+a{
+	font-size: 12px;
+	text-decoration: none;
+	color: #3c434a;
+}
+a.link:hover{
+	color: #e34f48;
+}
+/*a标签共同样式开始*/
+
+/*浮动共通样式开始*/
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.clearfix:after{
+	content: "";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.clearfix{
+	*zoom: 1;
+}
+/*浮动共通样式结束*/
+
+
+.transition{
+	transition: all 0.5s;
+}
+
+/*下拉层共通样式开始*/
+.done{
+	position: relative;
+}
+.donelist{
+	display: none;
+	position: absolute;
+}
+.done-left{
+	left: 0;
+}
+.done-right{
+	right: 0;
+}
+/*下拉层共通样式结束*/
+
+/*加载数据共通样式开始*/
+.done-loading{
+	width: 32px;
+	height: 32px;
+	margin: 30px;
+	background-image: url(../images/loading.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+/*加载数据共通样式结束*/

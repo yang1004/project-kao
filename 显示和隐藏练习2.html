@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>显示和隐藏练习2</title>
+	<link rel="stylesheet" href="css/common.css">
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.box{
+			width: 200px;
+			height: 200px;
+			background-color: red;
+			padding: 20px;
+			border: 20px solid yellow;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<button>显示</button>
+	<button>隐藏</button>
+	<div class="box transition"></div>
+</body>
+<script src="js/jquery-1.12.4.js"></script>
+<script>
+	function init($elem){
+		if($elem.is(':hidden')){
+			$elem.data('active',"hide");
+		}else{
+			$elem.data('active',"show");
+		}
+	}
+	function show($elem,callback){
+		if($elem.data('active') == 'show') return;
+		if($elem.data('active') == 'shown') return;
+		$elem.trigger('show').data('active','show');
+		callback();
+	}
+	function hide($elem,callback){
+		if($elem.data('active') == 'hide') return;
+		if($elem.data('active') == 'hidden') return;
+		$elem.trigger('hide').data('active','hide');
+		callback();
+	}
+</script>
+<script>
+	var slient = {
+		init:function($elem){
+			init($elem);
+		},
+		show:function($elem){
+			show($elem,function(){
+				$elem.show();
+				$elem.trigger('shown').data('active','shown');
+			});
+		},
+		hide:function($elem){
+			hide($elem,function(){
+				$elem.hide();
+				$elem.trigger('hidden').data('active','hidden');
+			});
+		}
+	}
+
+	var js = {
+		fade:{
+			init:function($elem){
+				js._init($elem);
+			},
+			show:function($elem){
+				js._show($elem,'fadeIn');
+			},
+			hide:function($elem){
+				js._hide($elem,'fadeOut');
+			}
+		},
+		slide:{
+			init:function($elem){
+				js._init($elem);
+			},
+			show:function($elem){
+				js._show($elem,'slideDown');
+			},
+			hide:function($elem){
+				js._hide($elem,'slideUp');
+			}
+		},
+		slideLeftRight:{
+			init:function($elem){
+				js._customInit($elem,{
+					width:0,
+					paddingLeft:0,
+					paddingRight:0,
+					borderLeftWidth:0,
+					borderRightWidth:0
+				})
+			},
+			show:function($elem){
+				js._customShow($elem);
+			},
+			hide:function($elem){
+				js._customHide($elem,{
+					width:0,
+					paddingLeft:0,
+					paddingRight:0,
+					borderLeftWidth:0,
+					borderRightWidth:0
+				})
+			}
+		},
+		fadeSlideLeftRight:{
+			init:function($elem){
+				js._customInit($elem,{
+					width:0,
+					paddingLeft:0,
+					paddingRight:0,
+					borderLeftWidth:0,
+					borderRightWidth:0,
+					opacity:0
+				})
+			},
+			show:function($elem){
+				js._customShow($elem);
+			},
+			hide:function($elem){
+				js._customHide($elem,{
+					width:0,
+					paddingLeft:0,
+					paddingRight:0,
+					borderLeftWidth:0,
+					borderRightWidth:0,
+					opacity:0
+				})
+			}
+		}
+	}
+
+	js._init = function($elem){
+		$elem.removeClass('transition');
+		init($elem);
+	}
+	js._show = function($elem,mode){
+		show($elem,function(){
+			$elem[mode]();
+			$elem.trigger('shown').data('active','shown');
+		});
+	}
+	js._hide = function($elem,mode){
+		hide($elem,function(){
+			$elem[mode]();
+			$elem.trigger('hidden').data('active','hidden');
+		});
+	}
+	js._customInit = function($elem,options){
+		$elem.removeClass('transition');
+		if($elem.is(':hidden')){
+			$elem.data('active',"hide");
+			var styles = {};
+			for(var key in options){
+				styles[key] = $elem.css(key);
+			}
+			$elem.data('styles',styles);
+			$elem.css(options)
+		}else{
+			$elem.data('active',"show");
+		}
+	}
+	js._customShow = function($elem){
+		$elem.show();
+		show($elem,function(){
+			$elem.stop().animate($elem.data('styles'),function(){
+				$elem.trigger('shown').data('active','shown');
+			})
+		})
+	}
+	js._customHide = function($elem,options){
+		hide($elem,function(){
+			$elem.stop().animate(options,function(){
+				$elem.trigger('hidden').data('active','hidden');
+			})
+		})
+	}
+</script>
+<script>
+	$(function(){
+
+		$('.box').on('show shown hide hidden',function(ev){
+			console.log(ev.type);
+		})
+
+		js.fadeSlideLeftRight.init($('.box'));
+		$('button').eq(0).on('click',function(){
+			js.fadeSlideLeftRight.show($('.box'));
+		});
+		$('button').eq(1).on('click',function(){
+			js.fadeSlideLeftRight.hide($('.box'));
+		});
+	})
+</script>
+</html>

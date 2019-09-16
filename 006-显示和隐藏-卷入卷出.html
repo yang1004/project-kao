@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>显示和隐藏-卷入卷出</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		#box{
+			width: 200px;
+			height: 200px;
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+	<button>显示</button>
+	<button>隐藏</button>
+	<div id="box"></div>
+</body>
+<script src="js/jquery-1.12.4.js"></script>
+<script>
+	function init($elem){
+		if($elem.is(':hidden')){
+			$elem.data('active','hidden');
+		}else{
+			$elem.data('active','shown');
+		}
+	}
+
+	function show($elem,callback){
+		if($elem.data('active') == "show") return;
+		if($elem.data('active') == "shown") return;
+		$elem.trigger('show').data('active','show');
+		typeof callback == "function" && callback();
+	}
+
+	function hide($elem,callback){
+		if($elem.data('active') == "hide") return;
+		if($elem.data('active') == "hidden") return;
+		$elem.trigger('hide').data('active','hide');
+		typeof callback == "function" && callback();
+	}
+</script>
+<!-- <script>
+	var slient = {
+		init:function($elem){
+			init($elem);
+		},
+		show:function($elem){
+			show($elem,function(){
+				$elem.show();
+				$elem.trigger('shown').data('active','shown');
+			})
+		},
+		hide:function($elem){
+			hide($elem,function(){
+				$elem.hide();
+				$elem.trigger('hidden').data('active','hidden');
+			})
+		}
+	}
+</script> -->
+<script>
+	var js = {
+		fade:{
+			init:function($elem){
+				init($elem);
+			},
+			show:function($elem){
+				show($elem,function(){
+					$elem.stop().fadeIn(function(){
+						$elem.trigger('shown').data('active','shown');
+					});
+				})
+			},
+			hide:function($elem){
+				hide($elem,function(){
+					$elem.stop().fadeOut(function(){
+						$elem.trigger('hidden').data('active','hidden');
+					});
+				})
+			}
+		},
+		slide:{
+			init:function($elem){
+				init($elem);
+			},
+			show:function($elem){
+				show($elem,function(){
+					$elem.stop().slideDown(function(){
+						$elem.trigger('shown').data('active','shown');
+					});
+				})
+			},
+			hide:function($elem){
+				hide($elem,function(){
+					$elem.stop().slideUp(function(){
+						$elem.trigger('hidden').data('active','hidden');
+					});
+				})
+			}
+		}
+	}
+</script>
+<script>
+	$(function(){
+		$('#box').on('show shown hide hidden',function(ev){
+			console.log(ev.type);
+		})
+	
+		js.slide.init($('#box'));
+		$('button').eq(0).on('click',function(){
+			js.slide.show($('#box'));
+		});
+		$('button').eq(1).on('click',function(){
+			js.slide.hide($('#box'));
+		});
+	})
+</script>
+</html>
